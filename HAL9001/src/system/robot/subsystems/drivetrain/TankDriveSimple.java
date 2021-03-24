@@ -366,7 +366,8 @@ public class TankDriveSimple extends NonHolonomicDrivetrain {
             turnPower = -turnPower;
 
             if(turnPower == 0) {
-                double correction = -headingController.update(localizer.getPoseEstimate().getHeading(), localizer.getPoseVelocity().getHeading());
+                double correction = abs(headingController.update(localizer.getPoseEstimate().getHeading()));
+                correction *= signum(headingController.getLastError()); //cannot be combined into previous line, update() has side effects
                 turnPower += abs(headingController.getLastError()) < headingAngleToleranceRadians ? 0 : correction;
             }
             else {
